@@ -370,8 +370,8 @@ function impulseResponse(
 }
 
 function reverb(audioContext: AudioContext) {
-  let seconds = 1;
-  let decay = 5;
+  let seconds = 3;
+  let decay = 2;
   let reverse = false;
 
   let rate = audioContext.sampleRate;
@@ -385,7 +385,6 @@ function reverb(audioContext: AudioContext) {
 
   for (i = 0; i < length; i++) {
     n = reverse ? length - i : i;
-
     impulseL[i] = (Math.random() * 2 - 1) * Math.pow(1 - n / length, decay);
     impulseR[i] = (Math.random() * 2 - 1) * Math.pow(1 - n / length, decay);
   }
@@ -438,11 +437,10 @@ export function playNote(
     clickSoundIdsToOscillatorType[
       Config.playSoundOnClick as DynamicClickSounds
     ];
-  gainNode.gain.value = parseFloat(Config.soundVolume);
-  gainNode.gain.setTargetAtTime(0, audioCtx.currentTime + 0.4, 0.1);
+  gainNode.gain.value = 0.5;
+  gainNode.gain.setTargetAtTime(0, audioCtx.currentTime + 0.2, 0.05);
 
   let convolver = audioCtx.createConvolver();
-  convolver.buffer = reverb(audioCtx);
 
   // gainNode.connect(convolver);
   // convolver.connect(gainNode);
@@ -459,11 +457,13 @@ export function playNote(
   }
   currentOscillatorNode = oscillatorNode;
 
+  convolver.buffer = reverb(audioCtx);
+
   oscillatorNode.frequency.value = currentFrequency;
 
   oscillatorNode.start(audioCtx.currentTime);
 
-  oscillatorNode.stop(audioCtx.currentTime + 0.5);
+  oscillatorNode.stop(audioCtx.currentTime + 0.25);
 }
 
 export function playClick(): void {
