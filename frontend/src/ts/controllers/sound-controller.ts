@@ -339,9 +339,11 @@ function initAudioContext(): void {
   }
 }
 
-let dream_notes: Array<string> = ["C", "D", "E", "G"];
+let blues_notes: Array<string> = ["C", "D", "E", "G"];
 let dream_octave: number = 4;
 let direction: number = 1;
+
+let dream_notes: Array<string> = ["C", "D", "E", "G", "A"];
 
 function impulseResponse(
   duration: number,
@@ -360,11 +362,38 @@ function impulseResponse(
   if (!decay) decay = 2.0;
   for (var i = 0; i < length; i++) {
     var n = reverse ? length - i : i;
+
     impulseL[i] = (Math.random() * 2 - 1) * Math.pow(1 - n / length, decay);
     impulseR[i] = (Math.random() * 2 - 1) * Math.pow(1 - n / length, decay);
   }
   return impulse;
 }
+
+function reverb(audioContext: AudioContext) {
+  let seconds = 1;
+  let decay = 5;
+  let reverse = false;
+
+  let rate = audioContext.sampleRate;
+  let length = rate * seconds;
+
+  let impulse = audioContext.createBuffer(2, length, rate);
+  let impulseL = impulse.getChannelData(0);
+  let impulseR = impulse.getChannelData(1);
+
+  let n, i;
+
+  for (i = 0; i < length; i++) {
+    n = reverse ? length - i : i;
+
+    impulseL[i] = (Math.random() * 2 - 1) * Math.pow(1 - n / length, decay);
+    impulseR[i] = (Math.random() * 2 - 1) * Math.pow(1 - n / length, decay);
+  }
+
+  return impulse;
+}
+
+let currentOscillatorNode: OscillatorNode | undefined;
 
 export function playNote(
   codeOverride?: string,
@@ -380,11 +409,7 @@ export function playNote(
   //   return;
   // }
 
-  console.log("length of array:" + dream_notes.length);
-
   let randNote: number = Math.floor(Math.random() * dream_notes.length);
-
-  console.log(randNote);
 
   if (Math.random() < 0.1) {
     dream_octave += direction;
@@ -413,21 +438,32 @@ export function playNote(
     clickSoundIdsToOscillatorType[
       Config.playSoundOnClick as DynamicClickSounds
     ];
-  gainNode.gain.value = parseFloat(Config.soundVolume) / 10;
-  gainNode.gain.setTargetAtTime(0, audioCtx.currentTime + 0.2, 0.1);
-  oscillatorNode.connect(gainNode);
-  gainNode.connect(audioCtx.destination);
+  gainNode.gain.value = parseFloat(Config.soundVolume);
+  gainNode.gain.setTargetAtTime(0, audioCtx.currentTime + 0.4, 0.1);
 
   let convolver = audioCtx.createConvolver();
-  convolver.buffer = impulseResponse(100, 100, true, audioCtx);
-  convolver.connect(audioCtx.destination);
+  convolver.buffer = reverb(audioCtx);
 
-  // oscillatorNode.connect(convolver)
+  // gainNode.connect(convolver);
+  // convolver.connect(gainNode);
+  // gainNode.connect(audioCtx.destination);
+  // oscillatorNode.connect(gainNode);
+  // oscillatorNode.connect(convolver);
 
-  oscillatorNode.start(audioCtx.currentTime);
+  oscillatorNode.connect(convolver);
+  convolver.connect(gainNode);
+  gainNode.connect(audioCtx.destination);
+
+  if (currentOscillatorNode) {
+    currentOscillatorNode.stop();
+  }
+  currentOscillatorNode = oscillatorNode;
+
   oscillatorNode.frequency.value = currentFrequency;
 
-  oscillatorNode.stop(audioCtx.currentTime + 0.3);
+  oscillatorNode.start(audioCtx.currentTime);
+
+  oscillatorNode.stop(audioCtx.currentTime + 0.5);
 }
 
 export function playClick(): void {
