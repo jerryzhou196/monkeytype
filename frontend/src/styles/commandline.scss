@@ -1,3 +1,24 @@
+.themeBubbles {
+  position: relative; /* Ensure the parent element is positioned */
+}
+
+.themeBubble {
+  border-radius: 50%; /* Add rounded corners */
+  position: absolute; /* Position both elements relative to the parent element */
+}
+
+.themeBubble:first-child {
+  /* Add styles for the first element with class themeBubble */
+}
+
+.themeBubble:last-child {
+  /* Add styles for the second element with class themeBubble */
+  width: 1.2em !important;
+  height: 1.2em !important;
+  left: -5px;
+  top: 5px;
+}
+
 #commandLineWrapper {
   width: 100%;
   height: 100%;
@@ -11,6 +32,7 @@
   align-items: start;
   padding: 5rem 2rem;
   grid-template-columns: 1fr;
+
   transition: background 0.125s;
 
   #commandInput {

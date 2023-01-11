@@ -99,8 +99,8 @@ function showFound(): void {
         commandsHTML += `<div class="entry withThemeBubbles" command="${obj.id}" style="${customStyle}">
         ${iconHTML}<div>${obj.display}</div>
         <div class="themeBubbles">
-          <div class="themeBubble" style="background: ${obj.customData["bgColor"]}"></div>
           <div class="themeBubble" style="background: ${obj.customData["mainColor"]}"></div>
+          <div class="themeBubble" style="background: ${obj.customData["bgColor"]}"></div>
         </div>
         </div>`;
       } else {
