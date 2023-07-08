@@ -30,7 +30,8 @@
     "noPropertyAccessFromIndexSignature": true,
     "allowUnusedLabels": false,
     "allowUnreachableCode": false,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "sourceMap": true
   },
   "include": ["./src/**/*.ts"],
   "files": ["src/ts/modules.d.ts"]

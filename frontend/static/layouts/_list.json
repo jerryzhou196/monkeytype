@@ -1637,5 +1637,16 @@
       "row4": ["ņŅ", "bB", "īĪ", "kK", "pP", "oO", "āĀ", ",;", ".:", "ļĻ"],
       "row5": [" "]
     }
+  },
+  "mirrorBoard": {
+        "keymapShowTopRow": false,
+        "type": "ansi",
+        "customModifierMapping": [[""], ["shift"], ["caps"], ["caps", "shift"]],
+        "keys":{
+          "row1": ["`~~~~", "1!1!", "2@2@", "3#3#", "4$4$", "5%5%", "6^6^", "7&7&", "8*8*", "9(9(", "0)0)", "-_-_", "=+=+"],
+          "row2": ["qQpP", "wWoO", "eEiI", "rRuU", "tTtT", "yYyY", "uUtT", "iIiI", "oOoO", "pPpP", "[{[{", "]}]}", "\\|\\|"],
+          "row3": ["aA''", "sSlL", "dDkK", "fFjJ", "gGhH", "hHgG", "jJjJ", "kKkK", "lLlL", ";:;:", "'\"\""],
+          "row4": ["zZ..", "xX,,", "cCmM", "vVnN", "bBbB", "nNnN", "mMmM", ",<,<", ".>.>", "/?/?"]
+        }
   }
 }

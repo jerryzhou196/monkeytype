@@ -815,6 +815,7 @@ declare namespace MonkeyTypes {
     keymapShowTopRow: boolean;
     type: "iso" | "ansi" | "ortho" | "matrix";
     keys: Keys;
+    customModifierMapping?: string[][];
   }
 
   interface Layouts {

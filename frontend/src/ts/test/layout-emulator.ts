@@ -186,6 +186,14 @@ export async function getCharFromEvent(
 
   const layoutKeys = layout.keys;
 
+  const mapping: { [key: string]: boolean } = {
+    shift: event.shiftKey,
+    alt: event.altKey,
+    ctrl: event.ctrlKey,
+    meta: event.metaKey,
+    caps: capsState,
+  };
+
   const layoutMap = layoutKeys["row1"]
     .concat(layoutKeys["row2"])
     .concat(layoutKeys["row3"])
@@ -206,7 +214,27 @@ export async function getCharFromEvent(
     }
   }
   const newKeyPreview = layoutMap[mapIndex][0];
-  const shift = emulatedLayoutShouldShiftKey(event, newKeyPreview) ? 1 : 0;
+  let shift = 0;
+
+  if ("customModifierMapping" in layout && layout.customModifierMapping) {
+    layout.customModifierMapping.forEach((val, index) => {
+      let valid = true;
+      for (const key in mapping) {
+        if (
+          !(
+            (val.includes(key) && mapping[key]) ||
+            (!val.includes(key) && !mapping[key])
+          )
+        ) {
+          valid = false;
+          break;
+        }
+      }
+      shift = valid ? index : shift;
+    });
+  } else {
+    shift = emulatedLayoutShouldShiftKey(event, newKeyPreview) ? 1 : 0;
+  }
   const char = layoutMap[mapIndex][shift];
   if (char) {
     return char;
